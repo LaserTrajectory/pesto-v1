@@ -8,7 +8,7 @@ st.title("P.E.S.T.O – PyEcon Student Tools, Open Source")
 
 st.subheader("A project by Aniruddh Bhaskaran")
 
-tool_select = st.sidebar.selectbox("Choose a tool", ("Demand and Supply", "Placeholder"))
+tool_select = st.sidebar.selectbox("Choose a tool", ("Demand and Supply", "Macroeconomics"))
 
 if tool_select == "Demand and Supply":
 
@@ -378,7 +378,7 @@ if tool_select == "Demand and Supply":
 
 if tool_select == "Macroeconomics":
 
-    st.write("Placeholder for now :)")
+    st.write("QE Interactive Model")
 
 
 # Legacy Code 
