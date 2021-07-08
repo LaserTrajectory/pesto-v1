@@ -139,7 +139,7 @@ if tool_select == "Demand and Supply":
                 mode='markers',
                 x=[x_int],
                 y=[y_int],
-                name='D-S Intercept',
+                name='D-S Intercept', # show values in legend
                 marker=dict(
                     color='blue',
                     size=10
@@ -162,7 +162,7 @@ if tool_select == "Demand and Supply":
                 mode='markers',
                 x=[0],
                 y=[a],
-                name='P intercept - Demand',
+                name='P intercept - Demand', # show values in legend
                 marker=dict(
                     color='darkgreen',
                     size=10
@@ -173,7 +173,7 @@ if tool_select == "Demand and Supply":
                 mode='markers',
                 x=[0],
                 y=[c],
-                name='P intercept - Supply',
+                name='P intercept - Supply', # show values in legend
                 marker=dict(
                     color='darkred',
                     size=10
@@ -376,7 +376,7 @@ if tool_select == "Demand and Supply":
 
 
 
-if tool_select == "Placeholder":
+if tool_select == "Macroeconomics":
 
     st.write("Placeholder for now :)")
 
