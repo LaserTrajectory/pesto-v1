@@ -1,3 +1,5 @@
+from os import name
+from altair.vegalite.v4.schema.core import Mark
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
@@ -8,9 +10,9 @@ st.title("P.E.S.T.O – PyEcon Student Tools, Open Source")
 
 st.subheader("A project by Aniruddh Bhaskaran")
 
-tool_select = st.sidebar.selectbox("Choose a tool", ("Demand and Supply", "Macroeconomics"))
+tool_select = st.sidebar.selectbox("Choose a tool", ("Microeconomics", "Macroeconomics"))
 
-if tool_select == "Demand and Supply":
+if tool_select == "Microeconomics":
 
     st.header("Demand and Supply Graphing")
 
@@ -374,11 +376,123 @@ if tool_select == "Demand and Supply":
 
             st.plotly_chart(pc_fig)
 
+        if pc_select == "Price Floor":
 
+            st.write("Under development :)")
 
 if tool_select == "Macroeconomics":
 
-    st.write("QE Interactive Model")
+    st.header("Money Market Model")
+
+    mon_x = np.arange(2, 13)
+
+    sup_y = np.arange(0, 20)
+
+    num = 7
+
+    sup_x = [num for i in range(len(sup_y))]
+
+    m_fig = go.Figure(data=go.Line(x=mon_x, y=(20.5 + (-1.5 * mon_x)), name='Demand for Money',
+                      marker=dict(opacity=0)))
+    
+    m_fig.update_layout(title='Money Market Diagram', width=800, height=600)
+
+    m_fig.update_yaxes(rangemode="nonnegative", mirror=True, range=[0, 20], 
+                            zerolinewidth=2, zerolinecolor='black', showgrid=False, 
+                            title_text='Nominal interest rate', title_standoff=20, 
+                            nticks=10, dtick=20)
+
+    m_fig.update_xaxes(rangemode="nonnegative", mirror=True, range=[0, 15], 
+                            zerolinewidth=2, zerolinecolor='black', showgrid=False,
+                            title_text='Quantity of money', nticks=10, dtick=5)
+
+    m_fig.add_trace(go.Scatter(x=sup_x, y=sup_y, name='Money Supply'))
+
+    m_fig.add_trace(go.Scatter(mode='markers', x=[7], y=[10], 
+                    name='Intersection',
+                    showlegend = False,
+                    marker = dict(
+                        color = 'purple',
+                        size = 7.5
+                    )))
+    
+    m_fig.add_trace(go.Scatter(mode='markers', x=[0], y=[10], 
+                    name='IR',
+                    showlegend = False,
+                    marker = dict(
+                        color = 'purple',
+                        size = 7.5
+                    )))
+    
+    m_fig.add_shape(type="line", 
+                          x0=0, y0 = 10, x1 = 7, y1 = 10,
+                          line = dict(dash='dash'))
+
+    
+    m_fig.add_annotation(x=0, y=10.5, text="IR", showarrow=False, 
+                         xshift=-15, yshift=-5, arrowhead=1, 
+                         arrowsize=2, font=dict(size=14))
+
+    m_fig.add_annotation(x=7, y=19, text="Money Supply",
+            showarrow=False, arrowhead=1, yshift=10,
+            font=dict(size=14))
+
+    m_fig.add_annotation(x=11, y=4, text="Demand for money",
+            showarrow=False, arrowhead=1, yshift=-40,
+            font=dict(size=14), xshift=70)
+    
+
+    incr = st.checkbox("Check this to see the effect of an increased money supply")
+
+    if(incr):
+
+        sup_x_shift = [(i + 3) for i in sup_x]
+
+        m_fig.add_trace(go.Scatter(x=sup_x_shift, y=sup_y, name="Money Supply (1)"))
+
+        m_fig.add_trace(go.Scatter(mode='markers', x=[10], y=[5.5], 
+                    name='New intersection',
+                    showlegend = False,
+                    marker = dict(
+                        color = 'purple',
+                        size = 7.5
+                    )))
+
+        m_fig.add_trace(go.Scatter(mode='markers', x=[0], y=[5.5], 
+                    name='New IR',
+                    showlegend = False,
+                    marker = dict(
+                        color = 'purple',
+                        size = 7.5
+                    )))
+
+        m_fig.add_shape(type="line", 
+                          x0=0, y0 = 5.5, x1 = 10, y1 = 5.5,
+                          line = dict(dash='dash'))
+
+        m_fig.add_annotation(x=0, y=5.5, text="IR1", showarrow=False, 
+                         xshift=-15, yshift=2,arrowhead=1, 
+                         arrowsize=2, font=dict(size=14))
+
+        m_fig.add_annotation(x=10, y=15, xanchor="right", ay=0.5, 
+                             ax=-90, xshift=-7, arrowsize=3, 
+                             arrowhead=1)
+
+        m_fig.add_annotation(x=10, y=3, xanchor="right", ay=0.5, 
+                             ax=-90, xshift=-7, arrowsize=3, 
+                             arrowhead=1)
+
+        m_fig.add_annotation(x=10, y=19, text="Money Supply (1)",
+            showarrow=False, arrowhead=1,
+            font=dict(size=14), yshift=10, xshift=13)
+        
+        
+        
+
+
+    st.plotly_chart(m_fig)
+    
+
 
 
 # Legacy Code 
@@ -411,4 +525,3 @@ if tool_select == "Macroeconomics":
 # p.line(x, y, legend_label='Demand trend')
 
 # st.bokeh_chart(p, use_container_width=True)
-
