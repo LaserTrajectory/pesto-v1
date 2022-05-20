@@ -378,7 +378,165 @@ if tool_select == "Microeconomics":
 
         if pc_select == "Price Floor":
 
-            st.write("Under development :)")
+            price_floor = st.number_input("Enter a value for the price floor: ", max_value=a,
+                        value = y_int + 1, min_value=y_int)
+
+            pf_long_one_arr = np.ones(len(x))
+
+            pf_fig = go.Figure(data=go.Line(x=x, y = (a - b*x), name='Demand'))
+
+            pf_fig.update_layout(title='Demand and Supply Graph', width=750, height=500)
+
+            pf_fig.update_yaxes(rangemode="nonnegative", mirror=True, range=[-1, a + 3], 
+                            zerolinewidth=2, zerolinecolor='black', 
+                            title_text='Price', title_standoff=5, nticks=10, dtick=1)
+            pf_fig.update_xaxes(rangemode="nonnegative", mirror=True, range=[-1, ((a / b) + 2)], 
+                            zerolinewidth=2, zerolinecolor='black', 
+                            title_text='Quantity', nticks=10, dtick=0.5)
+
+            pf_fig.add_trace(go.Line(x=x, y=(c + d*x), name='Supply'))
+
+            pf_fig.add_trace(go.Line(x=x, y=(pf_long_one_arr * price_floor), name='Price Floor', 
+                  showlegend=True, line=dict(color='black')))
+
+            pf_fig.add_trace(go.Line(x=p_l_domain, y=(one_arr * y_int), name='Price Line 2', 
+                  showlegend=False))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[x_int],
+                y=[y_int],
+                name='D-S Intercept',
+                marker=dict(
+                    color='blue',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[a / b],
+                y=[0],
+                name='Q intercept',
+                marker=dict(
+                    color='green',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[0],
+                y=[a],
+                name='P intercept - Demand',
+                marker=dict(
+                    color='darkgreen',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[0],
+                y=[c],
+                name='P intercept - Supply',
+                marker=dict(
+                    color='darkred',
+                    size=10
+                )
+            ))
+
+            pf_new_qs = (a - price_floor) / b
+
+            pf_demand_area = integrate.quad(demand_fn, 0, pf_new_qs)
+
+            pf_cs = pf_demand_area[0] - (price_floor * ((a - price_floor) / b))
+
+            # print(pf_cs)
+
+            pf_ps = (price_floor * ((a - price_floor) / b)) - integrate.quad(supply_fn, 0, ((a - price_floor) / b))[0]
+
+            # print(pf_ps)
+
+            pf_dwl_demand_area = integrate.quad(demand_fn, pf_new_qs, x_int)
+
+            pf_dwl_supply_area = integrate.quad(supply_fn, pf_new_qs, x_int)
+
+            pf_dwl_area = pf_dwl_demand_area[0] - pf_dwl_supply_area[0]
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[pf_new_qs],
+                y=[c + (d * pf_new_qs)],
+                name='Producer Price',
+                marker=dict(
+                    color='darkred',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[pf_new_qs],
+                y=[a - (b * pf_new_qs)],
+                name='Consumer Price',
+                marker=dict(
+                    color='darkred',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[(a - price_floor) / b],
+                y=[price_floor],
+                name='PF-DC Intersection',
+                marker=dict(
+                    color='darkred',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[(price_floor - c) / d],
+                y=[price_floor],
+                name='PF-DC Intersection',
+                marker=dict(
+                    color='darkred',
+                    size=10
+                )
+            ))
+
+            pf_fig.add_trace(go.Scatter(
+                mode='markers',
+                x=[(a - price_floor) / b],
+                y=[c + (d * ((a - price_floor) / b))],
+                name='PF Price and Quantity Supplied',
+                marker=dict(
+                    color='darkred',
+                    size=10
+                )
+            ))
+            
+
+            pf_fig.add_trace(go.Scatter(x=[0, 0, ((a - price_floor) / b), ((a - price_floor) / b), 0], 
+            y=[c, price_floor, price_floor, (c + (d * ((a - price_floor) / b))), c], fill='toself', 
+            name='Price Floor Producer Surplus = {:.2f}'.format(pf_ps)))
+
+            pf_fig.add_trace(go.Scatter(x=[0, 0, ((a - price_floor) / b), 0], 
+            y=[price_floor, a, price_floor, price_floor], fill='toself', 
+            name='Price Floor Consumer Surplus = {:.2f}'.format(pf_cs)))
+
+            pf_fig.add_trace(go.Scatter(x=[((a - price_floor) / b), ((a - price_floor) / b), x_int, (((a - price_floor) / b))], 
+            y=[(c + (d * ((a - price_floor) / b))), price_floor, y_int, (c + (d * ((a - price_floor) / b)))], fill='toself', 
+            name='Price Floor Deadweight Loss = {:.3f}'.format(pf_dwl_area), line_color='gray'))
+
+            st.plotly_chart(pf_fig)
+
+
+
+
 
 if tool_select == "Macroeconomics":
 
